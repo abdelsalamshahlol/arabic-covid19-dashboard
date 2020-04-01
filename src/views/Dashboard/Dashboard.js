@@ -1,5 +1,5 @@
-import React, { Component, lazy, Suspense } from 'react';
-import { Bar, Line } from 'react-chartjs-2';
+import React, {Component, lazy, Suspense} from 'react';
+import {Bar, Line} from 'react-chartjs-2';
 import {
   Badge,
   Button,
@@ -20,8 +20,9 @@ import {
   Row,
   Table,
 } from 'reactstrap';
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
-import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
+import {CustomTooltips} from '@coreui/coreui-plugin-chartjs-custom-tooltips';
+import {getStyle, hexToRgba} from '@coreui/coreui/dist/js/coreui-utilities'
+import axios from 'axios';
 
 const Widget03 = lazy(() => import('../../views/Widgets/Widget03'));
 
@@ -228,10 +229,10 @@ const cardChartOpts4 = {
 
 // Social Box Chart
 const socialBoxData = [
-  { data: [65, 59, 84, 84, 51, 55, 40], label: 'facebook' },
-  { data: [1, 13, 9, 17, 34, 41, 38], label: 'twitter' },
-  { data: [78, 81, 80, 45, 34, 12, 40], label: 'linkedin' },
-  { data: [35, 23, 56, 22, 97, 23, 64], label: 'google' },
+  {data: [65, 59, 84, 84, 51, 55, 40], label: 'facebook'},
+  {data: [1, 13, 9, 17, 34, 41, 38], label: 'twitter'},
+  {data: [78, 81, 80, 45, 34, 12, 40], label: 'linkedin'},
+  {data: [35, 23, 56, 22, 97, 23, 64], label: 'google'},
 ];
 
 const makeSocialBoxData = (dataSetNo) => {
@@ -416,8 +417,8 @@ const mainChartOpts = {
     mode: 'index',
     position: 'nearest',
     callbacks: {
-      labelColor: function(tooltipItem, chart) {
-        return { backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].borderColor }
+      labelColor: function (tooltipItem, chart) {
+        return {backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].borderColor}
       }
     }
   },
@@ -453,16 +454,30 @@ const mainChartOpts = {
 };
 
 class Dashboard extends Component {
+  componentDidMount() {
+    // update every certain time
+    setInterval(() => {
+      this.updateStats()
+    }, 10000)
+  }
+
   constructor(props) {
     super(props);
-
+    // init stats
     this.toggle = this.toggle.bind(this);
     this.onRadioBtnClick = this.onRadioBtnClick.bind(this);
 
     this.state = {
       dropdownOpen: false,
       radioSelected: 2,
+      stats: {
+        confirmed: 0,
+        recovered: 0,
+        deaths: 0,
+        lastUpdate: undefined
+      }
     };
+    this.updateStats();
   }
 
   toggle() {
@@ -477,34 +492,43 @@ class Dashboard extends Component {
     });
   }
 
+  updateStats() {
+    console.log('updating stats')
+    axios.get('https://covid-19-api-shahlol.now.sh/api')
+      .then(({data}) => {
+        this.setState({
+          stats: {
+            confirmed: data.confirmed.value,
+            recovered: data.recovered.value,
+            deaths: data.deaths.value,
+            lastUpdate: data.lastUpdate
+          }
+        });
+      })
+      .catch(err => {
+        console.error({err});
+      })
+  }
+
+  numberFormat(value) {
+    return new Intl.NumberFormat('en-us').format(value);
+  }
+
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   render() {
-
+    const {confirmed, recovered} = this.state.stats;
     return (
       <div className="animated fadeIn">
         <Row>
           <Col xs="12" sm="6" lg="3">
             <Card className="text-white bg-info">
               <CardBody className="pb-0">
-                <ButtonGroup className="float-right">
-                  <ButtonDropdown id='card1' isOpen={this.state.card1} toggle={() => { this.setState({ card1: !this.state.card1 }); }}>
-                    <DropdownToggle caret className="p-0" color="transparent">
-                      <i className="icon-settings"></i>
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                      <DropdownItem>Action</DropdownItem>
-                      <DropdownItem>Another action</DropdownItem>
-                      <DropdownItem disabled>Disabled action</DropdownItem>
-                      <DropdownItem>Something else here</DropdownItem>
-                    </DropdownMenu>
-                  </ButtonDropdown>
-                </ButtonGroup>
-                <div className="text-value">9.823</div>
-                <div>Members online</div>
+                <div className="text-value">{this.numberFormat(confirmed)}</div>
+                <div>الحالات المؤكدة</div>
               </CardBody>
-              <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
-                <Line data={cardChartData2} options={cardChartOpts2} height={70} />
+              <div className="chart-wrapper mx-3" style={{height: '70px'}}>
+                <Line data={cardChartData2} options={cardChartOpts2} height={70}/>
               </div>
             </Card>
           </Col>
@@ -512,23 +536,11 @@ class Dashboard extends Component {
           <Col xs="12" sm="6" lg="3">
             <Card className="text-white bg-primary">
               <CardBody className="pb-0">
-                <ButtonGroup className="float-right">
-                  <Dropdown id='card2' isOpen={this.state.card2} toggle={() => { this.setState({ card2: !this.state.card2 }); }}>
-                    <DropdownToggle className="p-0" color="transparent">
-                      <i className="icon-location-pin"></i>
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                      <DropdownItem>Action</DropdownItem>
-                      <DropdownItem>Another action</DropdownItem>
-                      <DropdownItem>Something else here</DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                </ButtonGroup>
                 <div className="text-value">9.823</div>
                 <div>Members online</div>
               </CardBody>
-              <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
-                <Line data={cardChartData1} options={cardChartOpts1} height={70} />
+              <div className="chart-wrapper mx-3" style={{height: '70px'}}>
+                <Line data={cardChartData1} options={cardChartOpts1} height={70}/>
               </div>
             </Card>
           </Col>
@@ -537,7 +549,9 @@ class Dashboard extends Component {
             <Card className="text-white bg-warning">
               <CardBody className="pb-0">
                 <ButtonGroup className="float-right">
-                  <Dropdown id='card3' isOpen={this.state.card3} toggle={() => { this.setState({ card3: !this.state.card3 }); }}>
+                  <Dropdown id='card3' isOpen={this.state.card3} toggle={() => {
+                    this.setState({card3: !this.state.card3});
+                  }}>
                     <DropdownToggle caret className="p-0" color="transparent">
                       <i className="icon-settings"></i>
                     </DropdownToggle>
@@ -551,8 +565,8 @@ class Dashboard extends Component {
                 <div className="text-value">9.823</div>
                 <div>Members online</div>
               </CardBody>
-              <div className="chart-wrapper" style={{ height: '70px' }}>
-                <Line data={cardChartData3} options={cardChartOpts3} height={70} />
+              <div className="chart-wrapper" style={{height: '70px'}}>
+                <Line data={cardChartData3} options={cardChartOpts3} height={70}/>
               </div>
             </Card>
           </Col>
@@ -561,7 +575,9 @@ class Dashboard extends Component {
             <Card className="text-white bg-danger">
               <CardBody className="pb-0">
                 <ButtonGroup className="float-right">
-                  <ButtonDropdown id='card4' isOpen={this.state.card4} toggle={() => { this.setState({ card4: !this.state.card4 }); }}>
+                  <ButtonDropdown id='card4' isOpen={this.state.card4} toggle={() => {
+                    this.setState({card4: !this.state.card4});
+                  }}>
                     <DropdownToggle caret className="p-0" color="transparent">
                       <i className="icon-settings"></i>
                     </DropdownToggle>
@@ -575,8 +591,8 @@ class Dashboard extends Component {
                 <div className="text-value">9.823</div>
                 <div>Members online</div>
               </CardBody>
-              <div className="chart-wrapper mx-3" style={{ height: '70px' }}>
-                <Bar data={cardChartData4} options={cardChartOpts4} height={70} />
+              <div className="chart-wrapper mx-3" style={{height: '70px'}}>
+                <Bar data={cardChartData4} options={cardChartOpts4} height={70}/>
               </div>
             </Card>
           </Col>
@@ -594,15 +610,18 @@ class Dashboard extends Component {
                     <Button color="primary" className="float-right"><i className="icon-cloud-download"></i></Button>
                     <ButtonToolbar className="float-right" aria-label="Toolbar with button groups">
                       <ButtonGroup className="mr-3" aria-label="First group">
-                        <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(1)} active={this.state.radioSelected === 1}>Day</Button>
-                        <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(2)} active={this.state.radioSelected === 2}>Month</Button>
-                        <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(3)} active={this.state.radioSelected === 3}>Year</Button>
+                        <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(1)}
+                                active={this.state.radioSelected === 1}>Day</Button>
+                        <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(2)}
+                                active={this.state.radioSelected === 2}>Month</Button>
+                        <Button color="outline-secondary" onClick={() => this.onRadioBtnClick(3)}
+                                active={this.state.radioSelected === 3}>Year</Button>
                       </ButtonGroup>
                     </ButtonToolbar>
                   </Col>
                 </Row>
-                <div className="chart-wrapper" style={{ height: 300 + 'px', marginTop: 40 + 'px' }}>
-                  <Line data={mainChart} options={mainChartOpts} height={300} />
+                <div className="chart-wrapper" style={{height: 300 + 'px', marginTop: 40 + 'px'}}>
+                  <Line data={mainChart} options={mainChartOpts} height={300}/>
                 </div>
               </CardBody>
               <CardFooter>
@@ -610,27 +629,27 @@ class Dashboard extends Component {
                   <Col sm={12} md className="mb-sm-2 mb-0">
                     <div className="text-muted">Visits</div>
                     <strong>29.703 Users (40%)</strong>
-                    <Progress className="progress-xs mt-2" color="success" value="40" />
+                    <Progress className="progress-xs mt-2" color="success" value="40"/>
                   </Col>
                   <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
                     <div className="text-muted">Unique</div>
                     <strong>24.093 Users (20%)</strong>
-                    <Progress className="progress-xs mt-2" color="info" value="20" />
+                    <Progress className="progress-xs mt-2" color="info" value="20"/>
                   </Col>
                   <Col sm={12} md className="mb-sm-2 mb-0">
                     <div className="text-muted">Pageviews</div>
                     <strong>78.706 Views (60%)</strong>
-                    <Progress className="progress-xs mt-2" color="warning" value="60" />
+                    <Progress className="progress-xs mt-2" color="warning" value="60"/>
                   </Col>
                   <Col sm={12} md className="mb-sm-2 mb-0">
                     <div className="text-muted">New Users</div>
                     <strong>22.123 Users (80%)</strong>
-                    <Progress className="progress-xs mt-2" color="danger" value="80" />
+                    <Progress className="progress-xs mt-2" color="danger" value="80"/>
                   </Col>
                   <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
                     <div className="text-muted">Bounce Rate</div>
                     <strong>Average Rate (40.15%)</strong>
-                    <Progress className="progress-xs mt-2" color="primary" value="40" />
+                    <Progress className="progress-xs mt-2" color="primary" value="40"/>
                   </Col>
                 </Row>
               </CardFooter>
@@ -641,9 +660,9 @@ class Dashboard extends Component {
         <Row>
           <Col xs="6" sm="6" lg="3">
             <Suspense fallback={this.loading()}>
-              <Widget03 dataBox={() => ({ variant: 'facebook', friends: '89k', feeds: '459' })} >
+              <Widget03 dataBox={() => ({variant: 'facebook', friends: '89k', feeds: '459'})}>
                 <div className="chart-wrapper">
-                  <Line data={makeSocialBoxData(0)} options={socialChartOpts} height={90} />
+                  <Line data={makeSocialBoxData(0)} options={socialChartOpts} height={90}/>
                 </div>
               </Widget03>
             </Suspense>
@@ -651,9 +670,9 @@ class Dashboard extends Component {
 
           <Col xs="6" sm="6" lg="3">
             <Suspense fallback={this.loading()}>
-              <Widget03 dataBox={() => ({ variant: 'twitter', followers: '973k', tweets: '1.792' })} >
+              <Widget03 dataBox={() => ({variant: 'twitter', followers: '973k', tweets: '1.792'})}>
                 <div className="chart-wrapper">
-                  <Line data={makeSocialBoxData(1)} options={socialChartOpts} height={90} />
+                  <Line data={makeSocialBoxData(1)} options={socialChartOpts} height={90}/>
                 </div>
               </Widget03>
             </Suspense>
@@ -661,9 +680,9 @@ class Dashboard extends Component {
 
           <Col xs="6" sm="6" lg="3">
             <Suspense fallback={this.loading()}>
-              <Widget03 dataBox={() => ({ variant: 'linkedin', contacts: '500+', feeds: '292' })} >
+              <Widget03 dataBox={() => ({variant: 'linkedin', contacts: '500+', feeds: '292'})}>
                 <div className="chart-wrapper">
-                  <Line data={makeSocialBoxData(2)} options={socialChartOpts} height={90} />
+                  <Line data={makeSocialBoxData(2)} options={socialChartOpts} height={90}/>
                 </div>
               </Widget03>
             </Suspense>
@@ -671,9 +690,9 @@ class Dashboard extends Component {
 
           <Col xs="6" sm="6" lg="3">
             <Suspense fallback={this.loading()}>
-              <Widget03 dataBox={() => ({ variant: 'google-plus', followers: '894', circles: '92' })} >
+              <Widget03 dataBox={() => ({variant: 'google-plus', followers: '894', circles: '92'})}>
                 <div className="chart-wrapper">
-                  <Line data={makeSocialBoxData(3)} options={socialChartOpts} height={90} />
+                  <Line data={makeSocialBoxData(3)} options={socialChartOpts} height={90}/>
                 </div>
               </Widget03>
             </Suspense>
@@ -693,25 +712,27 @@ class Dashboard extends Component {
                       <Col sm="6">
                         <div className="callout callout-info">
                           <small className="text-muted">New Clients</small>
-                          <br />
+                          <br/>
                           <strong className="h4">9,123</strong>
                           <div className="chart-wrapper">
-                            <Line data={makeSparkLineData(0, brandPrimary)} options={sparklineChartOpts} width={100} height={30} />
+                            <Line data={makeSparkLineData(0, brandPrimary)} options={sparklineChartOpts} width={100}
+                                  height={30}/>
                           </div>
                         </div>
                       </Col>
                       <Col sm="6">
                         <div className="callout callout-danger">
                           <small className="text-muted">Recurring Clients</small>
-                          <br />
+                          <br/>
                           <strong className="h4">22,643</strong>
                           <div className="chart-wrapper">
-                            <Line data={makeSparkLineData(1, brandDanger)} options={sparklineChartOpts} width={100} height={30} />
+                            <Line data={makeSparkLineData(1, brandDanger)} options={sparklineChartOpts} width={100}
+                                  height={30}/>
                           </div>
                         </div>
                       </Col>
                     </Row>
-                    <hr className="mt-0" />
+                    <hr className="mt-0"/>
                     <div className="progress-group mb-4">
                       <div className="progress-group-prepend">
                         <span className="progress-group-text">
@@ -719,8 +740,8 @@ class Dashboard extends Component {
                         </span>
                       </div>
                       <div className="progress-group-bars">
-                        <Progress className="progress-xs" color="info" value="34" />
-                        <Progress className="progress-xs" color="danger" value="78" />
+                        <Progress className="progress-xs" color="info" value="34"/>
+                        <Progress className="progress-xs" color="danger" value="78"/>
                       </div>
                     </div>
                     <div className="progress-group mb-4">
@@ -730,8 +751,8 @@ class Dashboard extends Component {
                         </span>
                       </div>
                       <div className="progress-group-bars">
-                        <Progress className="progress-xs" color="info" value="56" />
-                        <Progress className="progress-xs" color="danger" value="94" />
+                        <Progress className="progress-xs" color="info" value="56"/>
+                        <Progress className="progress-xs" color="danger" value="94"/>
                       </div>
                     </div>
                     <div className="progress-group mb-4">
@@ -741,8 +762,8 @@ class Dashboard extends Component {
                         </span>
                       </div>
                       <div className="progress-group-bars">
-                        <Progress className="progress-xs" color="info" value="12" />
-                        <Progress className="progress-xs" color="danger" value="67" />
+                        <Progress className="progress-xs" color="info" value="12"/>
+                        <Progress className="progress-xs" color="danger" value="67"/>
                       </div>
                     </div>
                     <div className="progress-group mb-4">
@@ -752,8 +773,8 @@ class Dashboard extends Component {
                         </span>
                       </div>
                       <div className="progress-group-bars">
-                        <Progress className="progress-xs" color="info" value="43" />
-                        <Progress className="progress-xs" color="danger" value="91" />
+                        <Progress className="progress-xs" color="info" value="43"/>
+                        <Progress className="progress-xs" color="danger" value="91"/>
                       </div>
                     </div>
                     <div className="progress-group mb-4">
@@ -763,8 +784,8 @@ class Dashboard extends Component {
                         </span>
                       </div>
                       <div className="progress-group-bars">
-                        <Progress className="progress-xs" color="info" value="22" />
-                        <Progress className="progress-xs" color="danger" value="73" />
+                        <Progress className="progress-xs" color="info" value="22"/>
+                        <Progress className="progress-xs" color="danger" value="73"/>
                       </div>
                     </div>
                     <div className="progress-group mb-4">
@@ -774,8 +795,8 @@ class Dashboard extends Component {
                         </span>
                       </div>
                       <div className="progress-group-bars">
-                        <Progress className="progress-xs" color="info" value="53" />
-                        <Progress className="progress-xs" color="danger" value="82" />
+                        <Progress className="progress-xs" color="info" value="53"/>
+                        <Progress className="progress-xs" color="danger" value="82"/>
                       </div>
                     </div>
                     <div className="progress-group mb-4">
@@ -785,8 +806,8 @@ class Dashboard extends Component {
                         </span>
                       </div>
                       <div className="progress-group-bars">
-                        <Progress className="progress-xs" color="info" value="9" />
-                        <Progress className="progress-xs" color="danger" value="69" />
+                        <Progress className="progress-xs" color="info" value="9"/>
+                        <Progress className="progress-xs" color="danger" value="69"/>
                       </div>
                     </div>
                     <div className="legend text-center">
@@ -804,25 +825,27 @@ class Dashboard extends Component {
                       <Col sm="6">
                         <div className="callout callout-warning">
                           <small className="text-muted">Pageviews</small>
-                          <br />
+                          <br/>
                           <strong className="h4">78,623</strong>
                           <div className="chart-wrapper">
-                            <Line data={makeSparkLineData(2, brandWarning)} options={sparklineChartOpts} width={100} height={30} />
+                            <Line data={makeSparkLineData(2, brandWarning)} options={sparklineChartOpts} width={100}
+                                  height={30}/>
                           </div>
                         </div>
                       </Col>
                       <Col sm="6">
                         <div className="callout callout-success">
                           <small className="text-muted">Organic</small>
-                          <br />
+                          <br/>
                           <strong className="h4">49,123</strong>
                           <div className="chart-wrapper">
-                            <Line data={makeSparkLineData(3, brandSuccess)} options={sparklineChartOpts} width={100} height={30} />
+                            <Line data={makeSparkLineData(3, brandSuccess)} options={sparklineChartOpts} width={100}
+                                  height={30}/>
                           </div>
                         </div>
                       </Col>
                     </Row>
-                    <hr className="mt-0" />
+                    <hr className="mt-0"/>
                     <ul>
                       <div className="progress-group">
                         <div className="progress-group-header">
@@ -831,7 +854,7 @@ class Dashboard extends Component {
                           <span className="ml-auto font-weight-bold">43%</span>
                         </div>
                         <div className="progress-group-bars">
-                          <Progress className="progress-xs" color="warning" value="43" />
+                          <Progress className="progress-xs" color="warning" value="43"/>
                         </div>
                       </div>
                       <div className="progress-group mb-5">
@@ -841,47 +864,51 @@ class Dashboard extends Component {
                           <span className="ml-auto font-weight-bold">37%</span>
                         </div>
                         <div className="progress-group-bars">
-                          <Progress className="progress-xs" color="warning" value="37" />
+                          <Progress className="progress-xs" color="warning" value="37"/>
                         </div>
                       </div>
                       <div className="progress-group">
                         <div className="progress-group-header">
                           <i className="icon-globe progress-group-icon"></i>
                           <span className="title">Organic Search</span>
-                          <span className="ml-auto font-weight-bold">191,235 <span className="text-muted small">(56%)</span></span>
+                          <span className="ml-auto font-weight-bold">191,235 <span
+                            className="text-muted small">(56%)</span></span>
                         </div>
                         <div className="progress-group-bars">
-                          <Progress className="progress-xs" color="success" value="56" />
+                          <Progress className="progress-xs" color="success" value="56"/>
                         </div>
                       </div>
                       <div className="progress-group">
                         <div className="progress-group-header">
                           <i className="icon-social-facebook progress-group-icon"></i>
                           <span className="title">Facebook</span>
-                          <span className="ml-auto font-weight-bold">51,223 <span className="text-muted small">(15%)</span></span>
+                          <span className="ml-auto font-weight-bold">51,223 <span
+                            className="text-muted small">(15%)</span></span>
                         </div>
                         <div className="progress-group-bars">
-                          <Progress className="progress-xs" color="success" value="15" />
+                          <Progress className="progress-xs" color="success" value="15"/>
                         </div>
                       </div>
                       <div className="progress-group">
                         <div className="progress-group-header">
                           <i className="icon-social-twitter progress-group-icon"></i>
                           <span className="title">Twitter</span>
-                          <span className="ml-auto font-weight-bold">37,564 <span className="text-muted small">(11%)</span></span>
+                          <span className="ml-auto font-weight-bold">37,564 <span
+                            className="text-muted small">(11%)</span></span>
                         </div>
                         <div className="progress-group-bars">
-                          <Progress className="progress-xs" color="success" value="11" />
+                          <Progress className="progress-xs" color="success" value="11"/>
                         </div>
                       </div>
                       <div className="progress-group">
                         <div className="progress-group-header">
                           <i className="icon-social-linkedin progress-group-icon"></i>
                           <span className="title">LinkedIn</span>
-                          <span className="ml-auto font-weight-bold">27,319 <span className="text-muted small">(8%)</span></span>
+                          <span className="ml-auto font-weight-bold">27,319 <span
+                            className="text-muted small">(8%)</span></span>
                         </div>
                         <div className="progress-group-bars">
-                          <Progress className="progress-xs" color="success" value="8" />
+                          <Progress className="progress-xs" color="success" value="8"/>
                         </div>
                       </div>
                       <div className="divider text-center">
@@ -891,7 +918,7 @@ class Dashboard extends Component {
                     </ul>
                   </Col>
                 </Row>
-                <br />
+                <br/>
                 <Table hover responsive className="table-outline mb-0 d-none d-sm-table">
                   <thead className="thead-light">
                   <tr>
@@ -907,7 +934,7 @@ class Dashboard extends Component {
                   <tr>
                     <td className="text-center">
                       <div className="avatar">
-                        <img src={'assets/img/avatars/1.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com" />
+                        <img src={'assets/img/avatars/1.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com"/>
                         <span className="avatar-status badge-success"></span>
                       </div>
                     </td>
@@ -929,10 +956,10 @@ class Dashboard extends Component {
                           <small className="text-muted">Jun 11, 2015 - Jul 10, 2015</small>
                         </div>
                       </div>
-                      <Progress className="progress-xs" color="success" value="50" />
+                      <Progress className="progress-xs" color="success" value="50"/>
                     </td>
                     <td className="text-center">
-                      <i className="fa fa-cc-mastercard" style={{ fontSize: 24 + 'px' }}></i>
+                      <i className="fa fa-cc-mastercard" style={{fontSize: 24 + 'px'}}></i>
                     </td>
                     <td>
                       <div className="small text-muted">Last login</div>
@@ -942,7 +969,7 @@ class Dashboard extends Component {
                   <tr>
                     <td className="text-center">
                       <div className="avatar">
-                        <img src={'assets/img/avatars/2.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com" />
+                        <img src={'assets/img/avatars/2.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com"/>
                         <span className="avatar-status badge-danger"></span>
                       </div>
                     </td>
@@ -965,10 +992,10 @@ class Dashboard extends Component {
                           <small className="text-muted">Jun 11, 2015 - Jul 10, 2015</small>
                         </div>
                       </div>
-                      <Progress className="progress-xs" color="info" value="10" />
+                      <Progress className="progress-xs" color="info" value="10"/>
                     </td>
                     <td className="text-center">
-                      <i className="fa fa-cc-visa" style={{ fontSize: 24 + 'px' }}></i>
+                      <i className="fa fa-cc-visa" style={{fontSize: 24 + 'px'}}></i>
                     </td>
                     <td>
                       <div className="small text-muted">Last login</div>
@@ -978,7 +1005,7 @@ class Dashboard extends Component {
                   <tr>
                     <td className="text-center">
                       <div className="avatar">
-                        <img src={'assets/img/avatars/3.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com" />
+                        <img src={'assets/img/avatars/3.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com"/>
                         <span className="avatar-status badge-warning"></span>
                       </div>
                     </td>
@@ -1000,10 +1027,10 @@ class Dashboard extends Component {
                           <small className="text-muted">Jun 11, 2015 - Jul 10, 2015</small>
                         </div>
                       </div>
-                      <Progress className="progress-xs" color="warning" value="74" />
+                      <Progress className="progress-xs" color="warning" value="74"/>
                     </td>
                     <td className="text-center">
-                      <i className="fa fa-cc-stripe" style={{ fontSize: 24 + 'px' }}></i>
+                      <i className="fa fa-cc-stripe" style={{fontSize: 24 + 'px'}}></i>
                     </td>
                     <td>
                       <div className="small text-muted">Last login</div>
@@ -1013,7 +1040,7 @@ class Dashboard extends Component {
                   <tr>
                     <td className="text-center">
                       <div className="avatar">
-                        <img src={'assets/img/avatars/4.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com" />
+                        <img src={'assets/img/avatars/4.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com"/>
                         <span className="avatar-status badge-secondary"></span>
                       </div>
                     </td>
@@ -1035,10 +1062,10 @@ class Dashboard extends Component {
                           <small className="text-muted">Jun 11, 2015 - Jul 10, 2015</small>
                         </div>
                       </div>
-                      <Progress className="progress-xs" color="danger" value="98" />
+                      <Progress className="progress-xs" color="danger" value="98"/>
                     </td>
                     <td className="text-center">
-                      <i className="fa fa-paypal" style={{ fontSize: 24 + 'px' }}></i>
+                      <i className="fa fa-paypal" style={{fontSize: 24 + 'px'}}></i>
                     </td>
                     <td>
                       <div className="small text-muted">Last login</div>
@@ -1048,7 +1075,7 @@ class Dashboard extends Component {
                   <tr>
                     <td className="text-center">
                       <div className="avatar">
-                        <img src={'assets/img/avatars/5.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com" />
+                        <img src={'assets/img/avatars/5.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com"/>
                         <span className="avatar-status badge-success"></span>
                       </div>
                     </td>
@@ -1070,10 +1097,10 @@ class Dashboard extends Component {
                           <small className="text-muted">Jun 11, 2015 - Jul 10, 2015</small>
                         </div>
                       </div>
-                      <Progress className="progress-xs" color="info" value="22" />
+                      <Progress className="progress-xs" color="info" value="22"/>
                     </td>
                     <td className="text-center">
-                      <i className="fa fa-google-wallet" style={{ fontSize: 24 + 'px' }}></i>
+                      <i className="fa fa-google-wallet" style={{fontSize: 24 + 'px'}}></i>
                     </td>
                     <td>
                       <div className="small text-muted">Last login</div>
@@ -1083,7 +1110,7 @@ class Dashboard extends Component {
                   <tr>
                     <td className="text-center">
                       <div className="avatar">
-                        <img src={'assets/img/avatars/6.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com" />
+                        <img src={'assets/img/avatars/6.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com"/>
                         <span className="avatar-status badge-danger"></span>
                       </div>
                     </td>
@@ -1105,10 +1132,10 @@ class Dashboard extends Component {
                           <small className="text-muted">Jun 11, 2015 - Jul 10, 2015</small>
                         </div>
                       </div>
-                      <Progress className="progress-xs" color="success" value="43" />
+                      <Progress className="progress-xs" color="success" value="43"/>
                     </td>
                     <td className="text-center">
-                      <i className="fa fa-cc-amex" style={{ fontSize: 24 + 'px' }}></i>
+                      <i className="fa fa-cc-amex" style={{fontSize: 24 + 'px'}}></i>
                     </td>
                     <td>
                       <div className="small text-muted">Last login</div>
