@@ -23,6 +23,7 @@ import {
 import {CustomTooltips} from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import {getStyle, hexToRgba} from '@coreui/coreui/dist/js/coreui-utilities'
 import axios from 'axios';
+import moment from 'moment';
 
 const Widget03 = lazy(() => import('../../views/Widgets/Widget03'));
 
@@ -32,76 +33,29 @@ const brandInfo = getStyle('--info')
 const brandWarning = getStyle('--warning')
 const brandDanger = getStyle('--danger')
 
-// Card Chart 1
-const cardChartData1 = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-  datasets: [
-    {
-      label: 'My First dataset',
-      backgroundColor: brandPrimary,
-      borderColor: 'rgba(255,255,255,.55)',
-      data: [65, 59, 84, 84, 51, 55, 40],
-    },
-  ],
-};
-
-const cardChartOpts1 = {
-  tooltips: {
-    enabled: false,
-    custom: CustomTooltips
-  },
-  maintainAspectRatio: false,
-  legend: {
-    display: false,
-  },
-  scales: {
-    xAxes: [
-      {
-        gridLines: {
-          color: 'transparent',
-          zeroLineColor: 'transparent',
-        },
-        ticks: {
-          fontSize: 2,
-          fontColor: 'transparent',
-        },
-
-      }],
-    yAxes: [
-      {
-        display: false,
-        ticks: {
-          display: false,
-          min: Math.min.apply(Math, cardChartData1.datasets[0].data) - 5,
-          max: Math.max.apply(Math, cardChartData1.datasets[0].data) + 5,
-        },
-      }],
-  },
-  elements: {
-    line: {
-      borderWidth: 1,
-    },
-    point: {
-      radius: 4,
-      hitRadius: 10,
-      hoverRadius: 4,
-    },
-  }
-}
-
 
 // Card Chart 2
 const cardChartData2 = {
   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
   datasets: [
     {
-      label: 'My First dataset',
+      label: '',
       backgroundColor: brandInfo,
       borderColor: 'rgba(255,255,255,.55)',
       data: [1, 18, 9, 17, 34, 22, 11],
     },
   ],
 };
+
+const weekStartFromNow = moment(new Date()).subtract(1, 'weeks');
+const today = moment();
+let days= []
+var day = weekStartFromNow;
+// while (day < today){
+//   days.push(weekStartFromNow.toDate())
+//   day = day.clone().add(1, 'd');
+// }
+console.log({days});
 
 const cardChartOpts2 = {
   tooltips: {
@@ -517,57 +471,34 @@ class Dashboard extends Component {
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   render() {
-    const {confirmed, recovered} = this.state.stats;
+    const {confirmed, recovered, deaths} = this.state.stats;
     return (
       <div className="animated fadeIn">
         <Row>
           <Col xs="12" sm="6" lg="3">
             <Card className="text-white bg-info">
-              <CardBody className="pb-0">
+              <CardBody>
                 <div className="text-value">{this.numberFormat(confirmed)}</div>
-                <div>الحالات المؤكدة</div>
+                <h3>الحالات المؤكدة</h3>
               </CardBody>
-              <div className="chart-wrapper mx-3" style={{height: '70px'}}>
-                <Line data={cardChartData2} options={cardChartOpts2} height={70}/>
-              </div>
             </Card>
           </Col>
 
           <Col xs="12" sm="6" lg="3">
             <Card className="text-white bg-warning">
-              <CardBody className="pb-0">
+              <CardBody>
                 <div className="text-value">{this.numberFormat(recovered)}</div>
-                <div>حالات الشفاء</div>
+                <h3>حالات الشفاء</h3>
               </CardBody>
-              <div className="chart-wrapper" style={{height: '70px'}}>
-                <Line data={cardChartData3} options={cardChartOpts3} height={70}/>
-              </div>
             </Card>
           </Col>
 
           <Col xs="12" sm="6" lg="3">
             <Card className="text-white bg-danger">
-              <CardBody className="pb-0">
-                <ButtonGroup className="float-right">
-                  <ButtonDropdown id='card4' isOpen={this.state.card4} toggle={() => {
-                    this.setState({card4: !this.state.card4});
-                  }}>
-                    <DropdownToggle caret className="p-0" color="transparent">
-                      <i className="icon-settings"></i>
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                      <DropdownItem>Action</DropdownItem>
-                      <DropdownItem>Another action</DropdownItem>
-                      <DropdownItem>Something else here</DropdownItem>
-                    </DropdownMenu>
-                  </ButtonDropdown>
-                </ButtonGroup>
-                <div className="text-value">9.823</div>
-                <div>Members online</div>
+              <CardBody>
+                <div className="text-value">{this.numberFormat(deaths)}</div>
+                <h3>الوفيات</h3>
               </CardBody>
-              <div className="chart-wrapper mx-3" style={{height: '70px'}}>
-                <Bar data={cardChartData4} options={cardChartOpts4} height={70}/>
-              </div>
             </Card>
           </Col>
         </Row>
