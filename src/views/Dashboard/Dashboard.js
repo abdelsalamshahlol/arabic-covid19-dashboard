@@ -558,6 +558,7 @@ class Dashboard extends Component {
                   <tr>
                     <th>المرتبة</th>
                     <th className="text-center">الدولة</th>
+                    <th></th>
                     <th>الاصابات</th>
                     <th>شفاء</th>
                     <th>موت</th>
@@ -565,32 +566,34 @@ class Dashboard extends Component {
                   </thead>
                   <tbody>
                   {
-                     this.state.confirmed.map(country=>{
-                       console.log({country})
+                    this.state.confirmed.map((country, i) => {
+                      country.iso2 = country.iso2 ? country.iso2.toLowerCase() : ''
                       return (
-                        <tr>{country.name_ar}</tr>
-                    )
-                  })
+                        <tr>
+                          <td className="text-center">
+                            {i + 1}
+                          </td>
+                          <td className="text-centerd">
+                            <span>{country.name_ar} </span>
+                          </td>
+                          <td>
+                            <i className={`flag-icon flag-icon-${country.iso2} h4 mb-0`} title={country.countryRegion}/>
+                          </td>
+                          <td>
+                            <div className="clearfix">
+                              <div className="float-left">
+                                <strong>50%</strong>
+                              </div>
+                              <div className="float-right">
+                                <small className="text-muted">Jun 11, 2015 - Jul 10, 2015</small>
+                              </div>
+                            </div>
+                            <Progress className="progress-xs" color="success" value="50"/>
+                          </td>
+                        </tr>
+                      )
+                    })
                   }
-                  {/*<tr>*/}
-                  {/*  <td className="text-center">*/}
-
-                  {/*  </td>*/}
-                  {/*  <td className="text-center">*/}
-                  {/*    <i className="flag-icon flag-icon-us h4 mb-0" title="us" id="us"></i>*/}
-                  {/*  </td>*/}
-                  {/*  <td>*/}
-                  {/*    <div className="clearfix">*/}
-                  {/*      <div className="float-left">*/}
-                  {/*        <strong>50%</strong>*/}
-                  {/*      </div>*/}
-                  {/*      <div className="float-right">*/}
-                  {/*        <small className="text-muted">Jun 11, 2015 - Jul 10, 2015</small>*/}
-                  {/*      </div>*/}
-                  {/*    </div>*/}
-                  {/*    <Progress className="progress-xs" color="success" value="50"/>*/}
-                  {/*  </td>*/}
-                  {/*</tr>*/}
 
                   {/*<tr>*/}
                   {/*  <td className="text-center">*/}
