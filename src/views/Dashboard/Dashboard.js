@@ -484,6 +484,7 @@ class Dashboard extends Component {
           confirmedFinal.push(countryFinal)
         });
 
+        confirmedFinal = confirmedFinal.sort((a, b) => b.confirmed - a.confirmed);
         this.setState({
           confirmed: confirmedFinal
         });
