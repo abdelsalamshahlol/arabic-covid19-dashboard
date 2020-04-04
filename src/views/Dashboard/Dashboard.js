@@ -568,9 +568,10 @@ class Dashboard extends Component {
                   <tbody>
                   {
                     this.state.confirmed.map((country, i) => {
-                      country.iso2 = country.iso2 ? country.iso2.toLowerCase() : ''
+                      country.iso2 = country.iso2 ? country.iso2.toLowerCase() : '';
+                      const confirmedPercentage = ((country.confirmed / confirmed) * 100).toFixed(2);
                       return (
-                        <tr>
+                        <tr key={i}>
                           <td className="text-center">
                             {i + 1}
                           </td>
@@ -583,13 +584,12 @@ class Dashboard extends Component {
                           <td>
                             <div className="clearfix">
                               <div className="float-left">
-                                <strong>50%</strong>
-                              </div>
-                              <div className="float-right">
-                                <small className="text-muted">Jun 11, 2015 - Jul 10, 2015</small>
+                                <strong>
+                                  {confirmedPercentage}%
+                                </strong>
                               </div>
                             </div>
-                            <Progress className="progress-xs" color="success" value="50"/>
+                            <Progress className="progress-xs" color="success" value={confirmedPercentage}/>
                           </td>
                         </tr>
                       )
