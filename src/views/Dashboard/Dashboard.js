@@ -22,7 +22,7 @@ import {
 } from 'reactstrap';
 import {CustomTooltips} from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import {getStyle, hexToRgba} from '@coreui/coreui/dist/js/coreui-utilities'
-import {countriesAr} from "../../util/countries";
+import {countriesAr, iso2} from "../../util/countries";
 import axios from 'axios';
 import moment from 'moment';
 
@@ -559,6 +559,7 @@ class Dashboard extends Component {
                   {
                     this.state.confirmed.map((country, i) => {
                       country.name_ar = countriesAr[country.location];
+                      country.iso2 = iso2[country.location] ? iso2[country.location].toLowerCase() : '';
                       const confirmedPercentage = ((country.confirmed / confirmed) * 100).toFixed(2);
                       const recoveredPercentage = ((country.recovered / recovered) * 100).toFixed(2);
                       const deathsPercentage = ((country.deaths / deaths) * 100).toFixed(2);
@@ -572,7 +573,7 @@ class Dashboard extends Component {
                           </td>
                           <td>
                             <i className={`flag-icon flag-icon-${country.iso2 !== 'il' ? country.iso2 : ''} h4 mb-0`}
-                               title={country.countryRegion}/>
+                               title={country.iso2}/>
                           </td>
                           <td colSpan={2}>
                             <h4><strong className="badge">{this.numberFormat(country.confirmed)}</strong></h4>
