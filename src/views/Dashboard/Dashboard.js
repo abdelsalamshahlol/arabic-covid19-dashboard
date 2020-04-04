@@ -429,6 +429,7 @@ class Dashboard extends Component {
         confirmed: 0,
         recovered: 0,
         deaths: 0,
+        active: 0,
         lastUpdate: undefined
       },
       countries: new Set(),
@@ -450,13 +451,14 @@ class Dashboard extends Component {
   }
 
   getStats() {
-    axios.get('https://covid-19-api-shahlol.now.sh/api')
+    axios.get('https://covid2019-api.herokuapp.com/v2/total')
       .then(({data}) => {
         this.setState({
           stats: {
-            confirmed: data.confirmed.value,
-            recovered: data.recovered.value,
-            deaths: data.deaths.value,
+            confirmed: data.data.confirmed,
+            recovered: data.data.recovered,
+            deaths: data.data.deaths,
+            active: data.data.active,
             lastUpdate: data.lastUpdate
           }
         });
@@ -508,15 +510,12 @@ class Dashboard extends Component {
     this.getConfirmed();
   }
 
-  numberFormat(value) {
-    console.log({value})
-    return new Intl.NumberFormat('en-us').format(value);
-  }
+  numberFormat = (value) => (new Intl.NumberFormat('en-us').format(value));
 
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   render() {
-    const {confirmed, recovered, deaths} = this.state.stats;
+    const {confirmed, recovered, deaths, active} = this.state.stats;
     return (
       <div className="animated fadeIn">
         <Row>
@@ -528,7 +527,14 @@ class Dashboard extends Component {
               </CardBody>
             </Card>
           </Col>
-
+          <Col xs="12" sm="6" lg="3">
+            <Card className="text-white bg-dark">
+              <CardBody>
+                <div className="text-value">{this.numberFormat(active)}</div>
+                <h3>الحالات النشطة</h3>
+              </CardBody>
+            </Card>
+          </Col>
           <Col xs="12" sm="6" lg="3">
             <Card className="text-white bg-success">
               <CardBody>
@@ -580,7 +586,8 @@ class Dashboard extends Component {
                             <span>{country.name_ar}</span>
                           </td>
                           <td>
-                            <i className={`flag-icon flag-icon-${country.iso2 !== 'il' ? country.iso2 : ''} h4 mb-0`} title={country.countryRegion}/>
+                            <i className={`flag-icon flag-icon-${country.iso2 !== 'il' ? country.iso2 : ''} h4 mb-0`}
+                               title={country.countryRegion}/>
                           </td>
                           <td colSpan={2}>
                             <h4><strong className="badge">{this.numberFormat(country.confirmed)}</strong></h4>
@@ -621,7 +628,7 @@ class Dashboard extends Component {
                   }
                   </tbody>
                 </Table>
-                </CardBody>
+              </CardBody>
             </Card>
           </Col>
         </Row>
@@ -952,8 +959,8 @@ class Dashboard extends Component {
           </Col>
         </Row>
       </div>
-  );
+    );
   }
-  }
+}
 
-  export default Dashboard;
+export default Dashboard;
