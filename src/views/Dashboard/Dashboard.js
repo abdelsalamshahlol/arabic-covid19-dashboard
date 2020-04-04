@@ -619,46 +619,9 @@ class Dashboard extends Component {
                       )
                     })
                   }
-
-                  {/*<tr>*/}
-                  {/*  <td className="text-center">*/}
-                  {/*    <div className="avatar">*/}
-                  {/*      <img src={'assets/img/avatars/1.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com"/>*/}
-                  {/*      <span className="avatar-status badge-success"></span>*/}
-                  {/*    </div>*/}
-                  {/*  </td>*/}
-                  {/*  <td>*/}
-                  {/*    <div>Yiorgos Avraamu</div>*/}
-                  {/*    <div className="small text-muted">*/}
-                  {/*      <span>New</span> | Registered: Jan 1, 2015*/}
-                  {/*    </div>*/}
-                  {/*  </td>*/}
-                  {/*  <td className="text-center">*/}
-                  {/*    <i className="flag-icon flag-icon-us h4 mb-0" title="us" id="us"></i>*/}
-                  {/*  </td>*/}
-                  {/*  <td>*/}
-                  {/*    <div className="clearfix">*/}
-                  {/*      <div className="float-left">*/}
-                  {/*        <strong>50%</strong>*/}
-                  {/*      </div>*/}
-                  {/*      <div className="float-right">*/}
-                  {/*        <small className="text-muted">Jun 11, 2015 - Jul 10, 2015</small>*/}
-                  {/*      </div>*/}
-                  {/*    </div>*/}
-                  {/*    <Progress className="progress-xs" color="success" value="50"/>*/}
-                  {/*  </td>*/}
-                  {/*  <td className="text-center">*/}
-                  {/*    <i className="fa fa-cc-mastercard" style={{fontSize: 24 + 'px'}}></i>*/}
-                  {/*  </td>*/}
-                  {/*  <td>*/}
-                  {/*    <div className="small text-muted">Last login</div>*/}
-                  {/*    <strong>10 sec ago</strong>*/}
-                  {/*  </td>*/}
-                  {/*</tr>*/}
                   </tbody>
                 </Table>
-                <
-                  /CardBody>
+                </CardBody>
             </Card>
           </Col>
         </Row>
