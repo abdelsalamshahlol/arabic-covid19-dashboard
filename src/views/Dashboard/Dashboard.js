@@ -521,7 +521,7 @@ class Dashboard extends Component {
       <div className="animated fadeIn">
         <Row>
           <Col xs="12" sm="6" lg="3">
-            <Card className="text-white bg-info">
+            <Card className="text-white bg-warning">
               <CardBody>
                 <div className="text-value">{this.numberFormat(confirmed)}</div>
                 <h3>الحالات المؤكدة</h3>
@@ -530,7 +530,7 @@ class Dashboard extends Component {
           </Col>
 
           <Col xs="12" sm="6" lg="3">
-            <Card className="text-white bg-warning">
+            <Card className="text-white bg-success">
               <CardBody>
                 <div className="text-value">{this.numberFormat(recovered)}</div>
                 <h3>حالات الشفاء</h3>
@@ -558,11 +558,10 @@ class Dashboard extends Component {
                   <thead className="thead-light">
                   <tr>
                     <th>المرتبة</th>
-                    <th className="text-center">الدولة</th>
-                    <th></th>
-                    <th>الاصابات</th>
-                    <th>شفاء</th>
-                    <th>موت</th>
+                    <th className="text-center" colSpan={2}>الدولة</th>
+                    <th colSpan={2}>الاصابات</th>
+                    <th colSpan={2}>شفاء</th>
+                    <th colSpan={2}>موت</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -570,18 +569,21 @@ class Dashboard extends Component {
                     this.state.confirmed.map((country, i) => {
                       country.iso2 = country.iso2 ? country.iso2.toLowerCase() : '';
                       const confirmedPercentage = ((country.confirmed / confirmed) * 100).toFixed(2);
+                      const recoveredPercentage = ((country.recovered / recovered) * 100).toFixed(2);
+                      const deathsPercentage = ((country.deaths / deaths) * 100).toFixed(2);
                       return (
                         <tr key={i}>
-                          <td className="text-center">
+                          <td className="text-right">
                             {i + 1}
                           </td>
                           <td className="text-centerd">
-                            <span>{country.name_ar} </span>
+                            <span>{country.name_ar}</span>
                           </td>
                           <td>
                             <i className={`flag-icon flag-icon-${country.iso2} h4 mb-0`} title={country.countryRegion}/>
                           </td>
-                          <td>
+                          <td colSpan={2}>
+                            <h4><strong className="badge">{this.numberFormat(country.confirmed)}</strong></h4>
                             <div className="clearfix">
                               <div className="float-left">
                                 <strong>
@@ -589,7 +591,29 @@ class Dashboard extends Component {
                                 </strong>
                               </div>
                             </div>
-                            <Progress className="progress-xs" color="success" value={confirmedPercentage}/>
+                            <Progress className="progress-xs" color="warning" value={confirmedPercentage}/>
+                          </td>
+                          <td colSpan={2}>
+                            <h4><strong className="badge">{this.numberFormat(country.recovered)}</strong></h4>
+                            <div className="clearfix">
+                              <div className="float-left">
+                                <strong>
+                                  {recoveredPercentage}%
+                                </strong>
+                              </div>
+                            </div>
+                            <Progress className="progress-xs" color="success" value={recoveredPercentage}/>
+                          </td>
+                          <td>
+                            <h4><strong className="badge">{this.numberFormat(country.deaths)}</strong></h4>
+                            <div className="clearfix">
+                              <div className="float-left">
+                                <strong>
+                                  {deathsPercentage}%
+                                </strong>
+                              </div>
+                            </div>
+                            <Progress className="progress-xs" color="danger" value={deathsPercentage}/>
                           </td>
                         </tr>
                       )
@@ -633,7 +657,8 @@ class Dashboard extends Component {
                   {/*</tr>*/}
                   </tbody>
                 </Table>
-              </CardBody>
+                <
+                  /CardBody>
             </Card>
           </Col>
         </Row>
@@ -776,9 +801,9 @@ class Dashboard extends Component {
                     <hr className="mt-0"/>
                     <div className="progress-group mb-4">
                       <div className="progress-group-prepend">
-                        <span className="progress-group-text">
-                          Monday
-                        </span>
+                    <span className="progress-group-text">
+                    Monday
+                    </span>
                       </div>
                       <div className="progress-group-bars">
                         <Progress className="progress-xs" color="info" value="34"/>
@@ -787,9 +812,9 @@ class Dashboard extends Component {
                     </div>
                     <div className="progress-group mb-4">
                       <div className="progress-group-prepend">
-                        <span className="progress-group-text">
-                        Tuesday
-                        </span>
+                    <span className="progress-group-text">
+                    Tuesday
+                    </span>
                       </div>
                       <div className="progress-group-bars">
                         <Progress className="progress-xs" color="info" value="56"/>
@@ -798,9 +823,9 @@ class Dashboard extends Component {
                     </div>
                     <div className="progress-group mb-4">
                       <div className="progress-group-prepend">
-                        <span className="progress-group-text">
-                        Wednesday
-                        </span>
+                    <span className="progress-group-text">
+                    Wednesday
+                    </span>
                       </div>
                       <div className="progress-group-bars">
                         <Progress className="progress-xs" color="info" value="12"/>
@@ -809,9 +834,9 @@ class Dashboard extends Component {
                     </div>
                     <div className="progress-group mb-4">
                       <div className="progress-group-prepend">
-                        <span className="progress-group-text">
-                        Thursday
-                        </span>
+                    <span className="progress-group-text">
+                    Thursday
+                    </span>
                       </div>
                       <div className="progress-group-bars">
                         <Progress className="progress-xs" color="info" value="43"/>
@@ -820,9 +845,9 @@ class Dashboard extends Component {
                     </div>
                     <div className="progress-group mb-4">
                       <div className="progress-group-prepend">
-                        <span className="progress-group-text">
-                        Friday
-                        </span>
+                    <span className="progress-group-text">
+                    Friday
+                    </span>
                       </div>
                       <div className="progress-group-bars">
                         <Progress className="progress-xs" color="info" value="22"/>
@@ -831,9 +856,9 @@ class Dashboard extends Component {
                     </div>
                     <div className="progress-group mb-4">
                       <div className="progress-group-prepend">
-                        <span className="progress-group-text">
-                        Saturday
-                        </span>
+                    <span className="progress-group-text">
+                    Saturday
+                    </span>
                       </div>
                       <div className="progress-group-bars">
                         <Progress className="progress-xs" color="info" value="53"/>
@@ -842,9 +867,9 @@ class Dashboard extends Component {
                     </div>
                     <div className="progress-group mb-4">
                       <div className="progress-group-prepend">
-                        <span className="progress-group-text">
-                        Sunday
-                        </span>
+                    <span className="progress-group-text">
+                    Sunday
+                    </span>
                       </div>
                       <div className="progress-group-bars">
                         <Progress className="progress-xs" color="info" value="9"/>
@@ -964,8 +989,8 @@ class Dashboard extends Component {
           </Col>
         </Row>
       </div>
-    );
+  );
   }
-}
+  }
 
-export default Dashboard;
+  export default Dashboard;
