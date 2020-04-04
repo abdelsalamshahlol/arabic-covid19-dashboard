@@ -22,6 +22,7 @@ import {
 } from 'reactstrap';
 import {CustomTooltips} from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import {getStyle, hexToRgba} from '@coreui/coreui/dist/js/coreui-utilities'
+import {countriesAr} from "../../util/countries";
 import axios from 'axios';
 import moment from 'moment';
 
@@ -557,7 +558,7 @@ class Dashboard extends Component {
                   <tbody>
                   {
                     this.state.confirmed.map((country, i) => {
-                      country.iso2 = country.location.toLowerCase() : '';
+                      country.name_ar = countriesAr[country.location];
                       const confirmedPercentage = ((country.confirmed / confirmed) * 100).toFixed(2);
                       const recoveredPercentage = ((country.recovered / recovered) * 100).toFixed(2);
                       const deathsPercentage = ((country.deaths / deaths) * 100).toFixed(2);
