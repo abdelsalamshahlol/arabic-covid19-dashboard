@@ -580,7 +580,7 @@ class Dashboard extends Component {
                             <span>{country.name_ar}</span>
                           </td>
                           <td>
-                            <i className={`flag-icon flag-icon-${country.iso2} h4 mb-0`} title={country.countryRegion}/>
+                            <i className={`flag-icon flag-icon-${country.iso2 !== 'il' ? country.iso2 : ''} h4 mb-0`} title={country.countryRegion}/>
                           </td>
                           <td colSpan={2}>
                             <h4><strong className="badge">{this.numberFormat(country.confirmed)}</strong></h4>
