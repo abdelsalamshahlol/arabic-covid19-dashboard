@@ -469,28 +469,12 @@ class Dashboard extends Component {
   }
 
   getConfirmed() {
-    axios.get('https://covid-19-api-shahlol.now.sh/api/confirmed')
+    axios.get('https://covid2019-api.herokuapp.com/v2/current')
       .then(({data}) => {
-        let confirmedFinal = [];
-        this.getCountries(data);
-
-        this.state.countries.forEach(country => {
-          let filteredCountry = data.filter(c => c.countryRegion === country);
-          let countryFinal = filteredCountry[0];
-
-          if (filteredCountry.length > 1) {
-            countryFinal['confirmed'] = filteredCountry.reduce((acc, curr) => acc + curr.confirmed, 0);
-            countryFinal['deaths'] = filteredCountry.reduce((acc, curr) => acc + curr.deaths, 0);
-            countryFinal['recovered'] = filteredCountry.reduce((acc, curr) => acc + curr.recovered, 0);
-          }
-          confirmedFinal.push(countryFinal)
-        });
-
-        confirmedFinal = confirmedFinal.sort((a, b) => b.confirmed - a.confirmed);
+        let confirmed = data.data;
         this.setState({
-          confirmed: confirmedFinal
+          confirmed
         });
-        console.log(data, this.state.confirmed);
       })
       .catch(err => {
         console.error({err});
@@ -573,7 +557,7 @@ class Dashboard extends Component {
                   <tbody>
                   {
                     this.state.confirmed.map((country, i) => {
-                      country.iso2 = country.iso2 ? country.iso2.toLowerCase() : '';
+                      country.iso2 = country.location.toLowerCase() : '';
                       const confirmedPercentage = ((country.confirmed / confirmed) * 100).toFixed(2);
                       const recoveredPercentage = ((country.recovered / recovered) * 100).toFixed(2);
                       const deathsPercentage = ((country.deaths / deaths) * 100).toFixed(2);
