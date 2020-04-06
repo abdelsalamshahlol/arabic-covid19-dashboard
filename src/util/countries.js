@@ -43,6 +43,7 @@ export const countriesAr = {
   "Cuba": "كوبا",
   "Cyprus": "قبرص",
   "Czech Republic": "التشيك",
+  "Czechia": "التشيك",
   "Democratic Republic of the Congo": "جمهورية الكونغو الديمقراطية",
   "Denmark": "الدنمارك",
   "Djibouti": "جيبوتي",
@@ -202,8 +203,12 @@ export const countriesAr = {
   "Eswatini": "إسواتيني",
   "MS Zaandam": "السفينة إم إس زاندام",
   "Holy See": "الكرسي البابوي",
-  "Cabo Verde": "الرأس الأخض",
+  "Cabo Verde": "الرأس الأخضر",
   "Timor-Leste": "جمهورية تيمور الشرقية الديمقراطية",
+  "Korea, South": "جمهورية كوريا",
+  "Kosovo": "كوسوفو",
+  "Taiwan*": "تايوان",
+  "Western Sahara": "الصحراء الغربية",
 };
 
 export const iso2 = {
