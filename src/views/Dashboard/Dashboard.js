@@ -138,15 +138,15 @@ class Dashboard extends Component {
       labels: this.state.timeSeries.labels,
       datasets: [
         {
-          label: 'Confirmed Cases',
-          backgroundColor: hexToRgba(brandInfo, 10),
-          borderColor: brandInfo,
+          label: 'الحالات المؤكدة',
+          backgroundColor: 'transparent',
+          borderColor: brandWarning,
           pointHoverBackgroundColor: '#fff',
           borderWidth: 2,
           data: this.state.timeSeries.confirmed,
         },
         {
-          label: 'Recovered Cases',
+          label: 'حالات الشفاء',
           backgroundColor: 'transparent',
           borderColor: brandSuccess,
           pointHoverBackgroundColor: '#fff',
@@ -154,12 +154,11 @@ class Dashboard extends Component {
           data: this.state.timeSeries.recovered,
         },
         {
-          label: 'Deaths',
+          label: 'الوفيات',
           backgroundColor: 'transparent',
           borderColor: brandDanger,
           pointHoverBackgroundColor: '#fff',
-          borderWidth: 1,
-          borderDash: [8, 5],
+          borderWidth: 2,
           data: this.state.timeSeries.deaths,
         },
       ],
@@ -179,7 +178,7 @@ class Dashboard extends Component {
       },
       maintainAspectRatio: false,
       legend: {
-        display: false,
+        display: true,
       },
       scales: {
         xAxes: [
