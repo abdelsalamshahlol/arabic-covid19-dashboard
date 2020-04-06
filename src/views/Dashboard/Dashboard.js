@@ -48,16 +48,6 @@ const cardChartData2 = {
   ],
 };
 
-const weekStartFromNow = moment(new Date()).subtract(1, 'weeks');
-const today = moment();
-let days = []
-var day = weekStartFromNow;
-// while (day < today){
-//   days.push(weekStartFromNow.toDate())
-//   day = day.clone().add(1, 'd');
-// }
-console.log({days});
-
 const cardChartOpts2 = {
   tooltips: {
     enabled: false,
@@ -323,7 +313,7 @@ function random(min, max) {
 }
 
 var elements = 27;
-var data1 = [];
+var data1 = [333,332434,2];
 var data2 = [];
 var data3 = [];
 
@@ -625,8 +615,8 @@ class Dashboard extends Component {
               <CardBody>
                 <Row>
                   <Col sm="5">
-                    <CardTitle className="mb-0">Traffic</CardTitle>
-                    <div className="small text-muted">November 2015</div>
+                    <CardTitle className="mb-0">السلاسل الزمنية</CardTitle>
+                    <div className="small text-muted">dt property</div>
                   </Col>
                   <Col sm="7" className="d-none d-sm-inline-block">
                     <Button color="primary" className="float-right"><i className="icon-cloud-download"></i></Button>
