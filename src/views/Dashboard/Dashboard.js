@@ -234,7 +234,7 @@ class Dashboard extends Component {
             </Card>
           </Col>
           <Col xs="12" sm="6" lg="3">
-            <Card className="text-white bg-dark">
+            <Card className="text-white bg-google-plus">
               <CardBody>
                 <div className="text-value">{this.numberFormat(active)}</div>
                 <h3>الحالات النشطة</h3>
@@ -273,7 +273,7 @@ class Dashboard extends Component {
                     <th className="text-center" colSpan={2}>الدولة</th>
                     <th colSpan={2}>الاصابات</th>
                     <th colSpan={2}>شفاء</th>
-                    <th colSpan={2}>موت</th>
+                    <th colSpan={2}>وفات</th>
                   </tr>
                   </thead>
                   <tbody>
