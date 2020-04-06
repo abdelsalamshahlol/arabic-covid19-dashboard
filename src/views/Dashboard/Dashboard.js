@@ -17,7 +17,8 @@ import {CustomTooltips} from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import {getStyle, hexToRgba} from '@coreui/coreui/dist/js/coreui-utilities'
 import {countriesAr, iso2} from "../../util/countries";
 import axios from 'axios';
-import moment from 'moment';
+// import moment from 'moment';
+import zoom from 'chartjs-plugin-zoom'
 
 const brandPrimary = getStyle('--primary')
 const brandSuccess = getStyle('--success')
@@ -205,7 +206,22 @@ class Dashboard extends Component {
           hoverBorderWidth: 3,
         },
       },
+      pan: {
+        // Boolean to enable panning
+        enabled: true,
+        // Panning directions. Remove the appropriate direction to disable
+        // Eg. 'y' would only allow panning in the y direction
+        mode: 'xy'
+      },
+      zoom: {
+        // Boolean to enable zooming
+        enabled: true,
+        // Zooming directions. Remove the appropriate direction to disable
+        // Eg. 'y' would only allow zooming in the y direction
+        mode: 'xy',
+      }
     };
+
     return (
       <div className="animated fadeIn">
         <Row>

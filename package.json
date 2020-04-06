@@ -17,6 +17,7 @@
     "axios": "^0.19.2",
     "bootstrap": "^4.3.1",
     "chart.js": "^2.8.0",
+    "chartjs-plugin-zoom": "^0.7.5",
     "classnames": "^2.2.6",
     "core-js": "^3.1.4",
     "enzyme": "^3.10.0",
