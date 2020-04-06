@@ -313,7 +313,7 @@ function random(min, max) {
 }
 
 var elements = 27;
-var data1 = [333,332434,2];
+var data1 = [333, 332434, 2];
 var data2 = [];
 var data3 = [];
 
@@ -322,37 +322,6 @@ for (var i = 0; i <= elements; i++) {
   data2.push(random(80, 100));
   data3.push(65);
 }
-
-const mainChart = {
-  labels: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-  datasets: [
-    {
-      label: 'My First dataset',
-      backgroundColor: hexToRgba(brandInfo, 10),
-      borderColor: brandInfo,
-      pointHoverBackgroundColor: '#fff',
-      borderWidth: 2,
-      data: data1,
-    },
-    {
-      label: 'My Second dataset',
-      backgroundColor: 'transparent',
-      borderColor: brandSuccess,
-      pointHoverBackgroundColor: '#fff',
-      borderWidth: 2,
-      data: data2,
-    },
-    {
-      label: 'My Third dataset',
-      backgroundColor: 'transparent',
-      borderColor: brandDanger,
-      pointHoverBackgroundColor: '#fff',
-      borderWidth: 1,
-      borderDash: [8, 5],
-      data: data3,
-    },
-  ],
-};
 
 const mainChartOpts = {
   tooltips: {
@@ -424,7 +393,14 @@ class Dashboard extends Component {
         lastUpdate: undefined
       },
       countries: new Set(),
-      confirmed: []
+      confirmed: [],
+      timeSeries: {
+        labels: [],
+        confirmed: [],
+        recovered: [],
+        deaths: [],
+        dateTime: undefined
+      }
     };
     this.updateStats();
   }
@@ -472,17 +448,40 @@ class Dashboard extends Component {
       })
   }
 
-  getCountries(confirmed) {
-    const countries = new Set();
-    confirmed.forEach(c => countries.add(c.countryRegion));
-    this.setState({
-      countries: countries
-    })
+  getTimeSeries() {
+    axios.get('https://covid2019-api.herokuapp.com/v2/timeseries/global')
+      .then(({data}) => {
+        const labels = data.data.map((d) => Object.keys(d)[0]);
+        let confirmed = [];
+        let recovered = [];
+        let deaths = [];
+
+        data.data.forEach(obj => {
+          confirmed.push(Object.values(obj)[0].confirmed);
+          recovered.push(Object.values(obj)[0].recovered);
+          deaths.push(Object.values(obj)[0].deaths);
+        });
+
+        this.setState({
+          timeSeries: {
+            confirmed,
+            recovered,
+            deaths,
+            labels,
+            lastUpdate: data.dt
+          }
+        });
+
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
   updateStats() {
     this.getStats();
     this.getConfirmed();
+    this.getTimeSeries();
   }
 
   numberFormat = (value) => (new Intl.NumberFormat('en-us').format(value));
@@ -491,6 +490,38 @@ class Dashboard extends Component {
 
   render() {
     const {confirmed, recovered, deaths, active} = this.state.stats;
+
+    let mainChart = {
+      labels: this.state.timeSeries.labels,
+      datasets: [
+        {
+          label: 'Confirmed Cases',
+          backgroundColor: hexToRgba(brandInfo, 10),
+          borderColor: brandInfo,
+          pointHoverBackgroundColor: '#fff',
+          borderWidth: 2,
+          data: this.state.timeSeries.confirmed,
+        },
+        {
+          label: 'Recovered Cases',
+          backgroundColor: 'transparent',
+          borderColor: brandSuccess,
+          pointHoverBackgroundColor: '#fff',
+          borderWidth: 2,
+          data: this.state.timeSeries.recovered,
+        },
+        {
+          label: 'Deaths',
+          backgroundColor: 'transparent',
+          borderColor: brandDanger,
+          pointHoverBackgroundColor: '#fff',
+          borderWidth: 1,
+          borderDash: [8, 5],
+          data: this.state.timeSeries.deaths,
+        },
+      ],
+    };
+
     return (
       <div className="animated fadeIn">
         <Row>
