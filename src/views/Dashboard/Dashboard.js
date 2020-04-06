@@ -312,61 +312,6 @@ function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-var elements = 27;
-var data1 = [333, 332434, 2];
-var data2 = [];
-var data3 = [];
-
-for (var i = 0; i <= elements; i++) {
-  data1.push(random(50, 200));
-  data2.push(random(80, 100));
-  data3.push(65);
-}
-
-const mainChartOpts = {
-  tooltips: {
-    enabled: false,
-    custom: CustomTooltips,
-    intersect: true,
-    mode: 'index',
-    position: 'nearest',
-    callbacks: {
-      labelColor: function (tooltipItem, chart) {
-        return {backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].borderColor}
-      }
-    }
-  },
-  maintainAspectRatio: false,
-  legend: {
-    display: false,
-  },
-  scales: {
-    xAxes: [
-      {
-        gridLines: {
-          drawOnChartArea: false,
-        },
-      }],
-    yAxes: [
-      {
-        ticks: {
-          beginAtZero: true,
-          maxTicksLimit: 5,
-          stepSize: Math.ceil(250 / 5),
-          max: 250,
-        },
-      }],
-  },
-  elements: {
-    point: {
-      radius: 0,
-      hitRadius: 10,
-      hoverRadius: 4,
-      hoverBorderWidth: 3,
-    },
-  },
-};
-
 class Dashboard extends Component {
   componentDidMount() {
     // update every certain time
@@ -521,7 +466,49 @@ class Dashboard extends Component {
         },
       ],
     };
-
+    const mainChartOpts = {
+      tooltips: {
+        enabled: false,
+        custom: CustomTooltips,
+        intersect: true,
+        mode: 'index',
+        position: 'nearest',
+        callbacks: {
+          labelColor: function (tooltipItem, chart) {
+            return {backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].borderColor}
+          }
+        }
+      },
+      maintainAspectRatio: false,
+      legend: {
+        display: false,
+      },
+      scales: {
+        xAxes: [
+          {
+            gridLines: {
+              drawOnChartArea: false,
+            },
+          }],
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+              maxTicksLimit: 5,
+              stepSize: Math.ceil(250 / 5),
+              max: confirmed,
+            },
+          }],
+      },
+      elements: {
+        point: {
+          radius: 0,
+          hitRadius: 10,
+          hoverRadius: 4,
+          hoverBorderWidth: 3,
+        },
+      },
+    };
     return (
       <div className="animated fadeIn">
         <Row>
@@ -647,7 +634,7 @@ class Dashboard extends Component {
                 <Row>
                   <Col sm="5">
                     <CardTitle className="mb-0">السلاسل الزمنية</CardTitle>
-                    <div className="small text-muted">dt property</div>
+                    <div className="small text-muted">{this.state.timeSeries.dateTime}</div>
                   </Col>
                   <Col sm="7" className="d-none d-sm-inline-block">
                     <Button color="primary" className="float-right"><i className="icon-cloud-download"></i></Button>
