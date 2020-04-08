@@ -242,6 +242,7 @@ class Dashboard extends Component {
             <Card>
               <CardBody className="text-center">
                 <a href="https://www.who.int/ar/emergencies/diseases/novel-coronavirus-2019/advice-for-public"
+                   rel="noopener noreferrer"
                    target="_blank">
                   <img src={who} alt="" width="250"/>
                   <span className="who-style">نصائح للجمهور بشأن مرض فيروس كورونا (كوفيد-19)‏</span>
