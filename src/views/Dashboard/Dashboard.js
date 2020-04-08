@@ -12,15 +12,12 @@ import {
   Table,
 } from 'reactstrap';
 import {CustomTooltips} from '@coreui/coreui-plugin-chartjs-custom-tooltips';
-import {getStyle, hexToRgba} from '@coreui/coreui/dist/js/coreui-utilities'
+import {getStyle} from '@coreui/coreui/dist/js/coreui-utilities'
 import {countriesAr, iso2} from "../../util/countries";
 import axios from 'axios';
-// import moment from 'moment';
-import zoom from 'chartjs-plugin-zoom'
+import 'chartjs-plugin-zoom'
 
-const brandPrimary = getStyle('--primary');
 const brandSuccess = getStyle('--success');
-const brandInfo = getStyle('--info');
 const brandWarning = getStyle('--warning');
 const brandDanger = getStyle('--danger');
 
