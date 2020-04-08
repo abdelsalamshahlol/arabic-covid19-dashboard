@@ -1,7 +1,7 @@
 {
   "name": "covid-19-dashboard",
   "version": "0.0.1",
-  "description": "Dashboard aims to present stats of coronavirus (covid19) pandemic",
+  "description": "Dashboard aims to present stats of pandemic coronavirus (covid19) in Arabic.",
   "author": "Abdelsalam Shahlol",
   "homepage": "",
   "private": true,
