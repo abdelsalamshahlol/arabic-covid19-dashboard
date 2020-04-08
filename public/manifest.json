@@ -1,6 +1,6 @@
 {
-  "short_name": "CoreUI-React",
-  "name": "CoreUI-React sample",
+  "short_name": "لوحة المعلومات covid-19",
+  "name": "لوحة معلومات جائحة كورونا المستجد | covid-19",
   "icons": [
     {
       "src": "./assets/img/favicon.png",
@@ -11,5 +11,5 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#000"
 }
