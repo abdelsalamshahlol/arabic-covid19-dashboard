@@ -1,9 +1,6 @@
-import React, {Component, lazy} from 'react';
+import React, {Component} from 'react';
 import {Line} from 'react-chartjs-2';
 import {
-  Button,
-  ButtonGroup,
-  ButtonToolbar,
   Card,
   CardBody,
   CardHeader,
@@ -207,17 +204,11 @@ class Dashboard extends Component {
         },
       },
       pan: {
-        // Boolean to enable panning
         enabled: true,
-        // Panning directions. Remove the appropriate direction to disable
-        // Eg. 'y' would only allow panning in the y direction
         mode: 'xy'
       },
       zoom: {
-        // Boolean to enable zooming
         enabled: true,
-        // Zooming directions. Remove the appropriate direction to disable
-        // Eg. 'y' would only allow zooming in the y direction
         mode: 'xy',
       }
     };
