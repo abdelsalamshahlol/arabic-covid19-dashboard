@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Line} from 'react-chartjs-2';
 import {
+  Alert,
   Card,
   CardBody,
   CardHeader,
@@ -17,19 +18,29 @@ import axios from 'axios';
 // import moment from 'moment';
 import zoom from 'chartjs-plugin-zoom'
 
-const brandPrimary = getStyle('--primary')
-const brandSuccess = getStyle('--success')
-const brandInfo = getStyle('--info')
-const brandWarning = getStyle('--warning')
-const brandDanger = getStyle('--danger')
+const brandPrimary = getStyle('--primary');
+const brandSuccess = getStyle('--success');
+const brandInfo = getStyle('--info');
+const brandWarning = getStyle('--warning');
+const brandDanger = getStyle('--danger');
+
+const alertStyle = {
+  'position': 'fixed',
+  'left': 0,
+  'zIndex': 9999,
+  'bottom': 0
+};
 
 class Dashboard extends Component {
   componentDidMount() {
     // update every certain time
     setInterval(() => {
       console.log('Updating stats');
-      this.updateStats()
-    }, 100000)
+      this.updateStats();
+      this.setState({
+        alertVisible: true
+      });
+    }, 60000);
   }
 
   constructor(props) {
@@ -42,7 +53,7 @@ class Dashboard extends Component {
         recovered: 0,
         deaths: 0,
         active: 0,
-        lastUpdate: undefined
+        lastUpdate: undefined,
       },
       countries: new Set(),
       confirmed: [],
@@ -52,7 +63,8 @@ class Dashboard extends Component {
         recovered: [],
         deaths: [],
         dateTime: undefined
-      }
+      },
+      alertVisible: false
     };
     // init stats
     this.updateStats();
@@ -123,6 +135,11 @@ class Dashboard extends Component {
     this.getStats();
     this.getConfirmed();
     this.getTimeSeries();
+    setTimeout(() => {
+      this.setState({
+        alertVisible: false
+      });
+    }, 5000)
   }
 
   numberFormat = (value) => (new Intl.NumberFormat('en-us').format(value));
@@ -130,11 +147,11 @@ class Dashboard extends Component {
   loading = () =>
     <div className="animated fadeIn pt-1 text-center">
       <div className="spinner-grow text-info" role="status">
-        <span className="sr-only">Loading...</span>
+        <span className="sr-only">جاري التحميل...</span>
       </div>
       <br/>
-      <strong>جاري التحميل</strong>
-    </div>
+      <strong>جاري التحميل...</strong>
+    </div>;
 
   render() {
     const {confirmed, recovered, deaths, active} = this.state.stats;
@@ -267,7 +284,7 @@ class Dashboard extends Component {
                 {
                   !this.state.confirmed.length > 0 ? this.loading() :
                     (
-                      <Table hover responsive className="mb-0 d-none d-sm-table">
+                      <Table hover responsive className="mb-0 d-none d-sm-table animated fadeIn">
                         <thead className="thead-light">
                         <tr>
                           <th>المرتبة</th>
@@ -357,7 +374,7 @@ class Dashboard extends Component {
                 {
                   !this.state.timeSeries.confirmed.length > 0 ? this.loading() :
                     (
-                      <div className="chart-wrapper" style={{height: 300 + 'px', marginTop: 40 + 'px'}}>
+                      <div className="chart-wrapper animated fadeIn" style={{height: 300 + 'px', marginTop: 40 + 'px'}}>
                         <Line data={mainChart} options={mainChartOpts} height={300}/>
                       </div>
                     )
@@ -366,6 +383,9 @@ class Dashboard extends Component {
             </Card>
           </Col>
         </Row>
+        <Alert color="success" isOpen={this.state.alertVisible} style={alertStyle}>
+          تم تحديث البيانات
+        </Alert>
       </div>
     );
   }
