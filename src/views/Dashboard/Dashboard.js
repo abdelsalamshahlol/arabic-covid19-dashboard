@@ -127,7 +127,14 @@ class Dashboard extends Component {
 
   numberFormat = (value) => (new Intl.NumberFormat('en-us').format(value));
 
-  loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
+  loading = () =>
+    <div className="animated fadeIn pt-1 text-center">
+      <div className="spinner-grow text-info" role="status">
+        <span className="sr-only">Loading...</span>
+      </div>
+      <br/>
+      <strong>جاري التحميل</strong>
+    </div>
 
   render() {
     const {confirmed, recovered, deaths, active} = this.state.stats;
@@ -257,75 +264,81 @@ class Dashboard extends Component {
                 الاصابات المؤكدة
               </CardHeader>
               <CardBody>
-                <Table hover responsive className="mb-0 d-none d-sm-table">
-                  <thead className="thead-light">
-                  <tr>
-                    <th>المرتبة</th>
-                    <th className="text-center" colSpan={2}>الدولة</th>
-                    <th colSpan={2}>الاصابات</th>
-                    <th colSpan={2}>شفاء</th>
-                    <th colSpan={2}>وفات</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {
-                    this.state.confirmed.map((country, i) => {
-                      country.name_ar = countriesAr[country.location];
-                      country.iso2 = iso2[country.location] ? iso2[country.location].toLowerCase() : '';
-                      const confirmedPercentage = ((country.confirmed / confirmed) * 100).toFixed(2);
-                      const recoveredPercentage = ((country.recovered / recovered) * 100).toFixed(2);
-                      const deathsPercentage = ((country.deaths / deaths) * 100).toFixed(2);
-                      return (
-                        <tr key={i}>
-                          <td className="text-right">
-                            {i + 1}
-                          </td>
-                          <td className="text-centerd">
-                            <span>{country.name_ar}</span>
-                          </td>
-                          <td>
-                            <i className={`flag-icon flag-icon-${country.iso2 !== 'il' ? country.iso2 : ''} h4 mb-0`}
-                               title={country.iso2}/>
-                          </td>
-                          <td colSpan={2}>
-                            <h4><strong className="badge">{this.numberFormat(country.confirmed)}</strong></h4>
-                            <div className="clearfix">
-                              <div className="float-left">
-                                <strong>
-                                  {confirmedPercentage}%
-                                </strong>
-                              </div>
-                            </div>
-                            <Progress className="progress-xs" color="warning" value={confirmedPercentage}/>
-                          </td>
-                          <td colSpan={2}>
-                            <h4><strong className="badge">{this.numberFormat(country.recovered)}</strong></h4>
-                            <div className="clearfix">
-                              <div className="float-left">
-                                <strong>
-                                  {recoveredPercentage}%
-                                </strong>
-                              </div>
-                            </div>
-                            <Progress className="progress-xs" color="success" value={recoveredPercentage}/>
-                          </td>
-                          <td>
-                            <h4><strong className="badge">{this.numberFormat(country.deaths)}</strong></h4>
-                            <div className="clearfix">
-                              <div className="float-left">
-                                <strong>
-                                  {deathsPercentage}%
-                                </strong>
-                              </div>
-                            </div>
-                            <Progress className="progress-xs" color="danger" value={deathsPercentage}/>
-                          </td>
+                {
+                  !this.state.confirmed.length > 0 ? this.loading() :
+                    (
+                      <Table hover responsive className="mb-0 d-none d-sm-table">
+                        <thead className="thead-light">
+                        <tr>
+                          <th>المرتبة</th>
+                          <th className="text-center" colSpan={2}>الدولة</th>
+                          <th colSpan={2}>الاصابات</th>
+                          <th colSpan={2}>شفاء</th>
+                          <th colSpan={2}>وفات</th>
                         </tr>
-                      )
-                    })
-                  }
-                  </tbody>
-                </Table>
+                        </thead>
+                        <tbody>
+                        {
+                          this.state.confirmed.map((country, i) => {
+                            country.name_ar = countriesAr[country.location];
+                            country.iso2 = iso2[country.location] ? iso2[country.location].toLowerCase() : '';
+                            const confirmedPercentage = ((country.confirmed / confirmed) * 100).toFixed(2);
+                            const recoveredPercentage = ((country.recovered / recovered) * 100).toFixed(2);
+                            const deathsPercentage = ((country.deaths / deaths) * 100).toFixed(2);
+                            return (
+                              <tr key={i}>
+                                <td className="text-right">
+                                  {i + 1}
+                                </td>
+                                <td className="text-centerd">
+                                  <span>{country.name_ar}</span>
+                                </td>
+                                <td>
+                                  <i
+                                    className={`flag-icon flag-icon-${country.iso2 !== 'il' ? country.iso2 : ''} h4 mb-0`}
+                                    title={country.iso2}/>
+                                </td>
+                                <td colSpan={2}>
+                                  <h4><strong className="badge">{this.numberFormat(country.confirmed)}</strong></h4>
+                                  <div className="clearfix">
+                                    <div className="float-left">
+                                      <strong>
+                                        {confirmedPercentage}%
+                                      </strong>
+                                    </div>
+                                  </div>
+                                  <Progress className="progress-xs" color="warning" value={confirmedPercentage}/>
+                                </td>
+                                <td colSpan={2}>
+                                  <h4><strong className="badge">{this.numberFormat(country.recovered)}</strong></h4>
+                                  <div className="clearfix">
+                                    <div className="float-left">
+                                      <strong>
+                                        {recoveredPercentage}%
+                                      </strong>
+                                    </div>
+                                  </div>
+                                  <Progress className="progress-xs" color="success" value={recoveredPercentage}/>
+                                </td>
+                                <td>
+                                  <h4><strong className="badge">{this.numberFormat(country.deaths)}</strong></h4>
+                                  <div className="clearfix">
+                                    <div className="float-left">
+                                      <strong>
+                                        {deathsPercentage}%
+                                      </strong>
+                                    </div>
+                                  </div>
+                                  <Progress className="progress-xs" color="danger" value={deathsPercentage}/>
+                                </td>
+                              </tr>
+                            )
+                          })
+                        }
+                        </tbody>
+                      </Table>
+                    )
+                }
               </CardBody>
             </Card>
           </Col>
@@ -341,9 +354,14 @@ class Dashboard extends Component {
                     <div className="small text-muted">{this.state.timeSeries.dateTime}</div>
                   </Col>
                 </Row>
-                <div className="chart-wrapper" style={{height: 300 + 'px', marginTop: 40 + 'px'}}>
-                  <Line data={mainChart} options={mainChartOpts} height={300}/>
-                </div>
+                {
+                  !this.state.timeSeries.confirmed.length > 0 ? this.loading() :
+                    (
+                      <div className="chart-wrapper" style={{height: 300 + 'px', marginTop: 40 + 'px'}}>
+                        <Line data={mainChart} options={mainChartOpts} height={300}/>
+                      </div>
+                    )
+                }
               </CardBody>
             </Card>
           </Col>
