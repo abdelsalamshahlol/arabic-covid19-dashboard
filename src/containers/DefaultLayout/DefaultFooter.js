@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 const propTypes = {
@@ -9,14 +9,16 @@ const defaultProps = {};
 
 class DefaultFooter extends Component {
   render() {
-
-    // eslint-disable-next-line
-    const { children, ...attributes } = this.props;
-
     return (
       <React.Fragment>
-        <span><a href="https://coreui.io">CoreUI</a> &copy; 2019 creativeLabs.</span>
-        <span className="ml-auto">Powered by <a href="https://coreui.io/react">CoreUI for React</a></span>
+        <span><a href="https://github.com/abdelsalamshahlol" target="_blank"><i
+          className="fa fa-github fa-lg"/></a></span>
+        <span className="ml-auto">
+          <a href="https://en.wikipedia.org/wiki/Stay-at-home_order" className="text-decoration-none">
+          <span>Stay Home</span>
+            <i className="fa fa-home fa-lg pl-1"/>
+          </a>
+        </span>
       </React.Fragment>
     );
   }

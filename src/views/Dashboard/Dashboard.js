@@ -16,6 +16,7 @@ import {getStyle} from '@coreui/coreui/dist/js/coreui-utilities'
 import {countriesAr, iso2} from "../../util/countries";
 import axios from 'axios';
 import 'chartjs-plugin-zoom'
+import who from '../../assets/img/who.svg';
 
 const brandSuccess = getStyle('--success');
 const brandWarning = getStyle('--warning');
@@ -236,6 +237,19 @@ class Dashboard extends Component {
 
     return (
       <div className="animated fadeIn">
+        <Row>
+          <Col lg="12">
+            <Card>
+              <CardBody className="text-center">
+                <a href="https://www.who.int/ar/emergencies/diseases/novel-coronavirus-2019/advice-for-public"
+                   target="_blank">
+                  <img src={who} alt="" width="250"/>
+                  <span className="who-style">نصائح للجمهور بشأن مرض فيروس كورونا (كوفيد-19)‏</span>
+                </a>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
         <Row>
           <Col xs="12" sm="6" lg="3">
             <Card className="text-white bg-warning">
