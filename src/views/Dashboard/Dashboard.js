@@ -296,7 +296,7 @@ class Dashboard extends Component {
                 {
                   !this.state.confirmed.length > 0 ? this.loading() :
                     (
-                      <Table hover responsive className="mb-0 d-none d-sm-table animated fadeIn">
+                      <Table hover responsive className="mb-0 animated fadeIn">
                         <thead className="thead-light">
                         <tr>
                           <th>المرتبة</th>
